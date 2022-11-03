@@ -1,10 +1,96 @@
 buildscript {
     ext {
-        compose_version = '1.1.1'
+        compose_version = '1.3.0'
+        versions = [
+                'versionCode'         : 1,
+                'versionName'         : "1.0",
+                'minSdk'              : 21,
+                'compileSdk'          : 33,
+                'targetSdk'           : 30,
+                'ktx'                 : '1.8.0',
+                'ktor'                : '1.6.8',
+                'composecompiler'     : '1.3.0',
+                'kotlinxserialization': '1.4.1',
+                'kotlin'              : '1.7.10',
+                'buildgradle'         : '7.2.0',
+                'gradleplugin'        : '1.7.10',
+                'gson'                : '2.8.6',
+                'lifecycleruntimektx:': '2.4.1',
+                'testlibraries'       : [
+                        'junit'     : '4.13.2',
+                        'mockk'     : '1.12.2',
+                        'coroutines': '1.6.4',
+                ],
+                'compose'             : [
+                        'composematerial'        : '1.1.0-alpha01',
+                        'composeui'              : '1.2.1',
+                        'activitycompose:'       : '1.5.1',
+                        'navigationcompose'      : '2.4.1',
+                        'constraintlayoutCompose': '1.0.1',
+                ],
+                'koin'                : '3.2.0-beta-1',
+                'kotlincoroutines'    : '1.6.4',
+                'livedatacore'        : '2.5.1',
+
+
+        ]
+        main = [
+                'kotlinserialization': "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
+                'gradleplugin'       : "com.android.tools.build:gradle:${versions.buildgradle}",
+                'kotlingradleplugin' : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.gradleplugin}",
+        ]
+        deps = [
+                'livedatacore'       : "androidx.lifecycle:lifecycle-livedata-core-ktx:${versions.livedatacore}",
+                'kotlin'             : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+                'kotlincoroutines'   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlincoroutines}",
+                'lifecycleruntimektx': "androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycleruntimektx}",
+                'gson'               : "com.google.code.gson:gson:${versions.gson}",
+                'ktx'                : "androidx.core:core-ktx:${versions.ktx}",
+                'ktor'               : [
+                        'clientandroid'      : "io.ktor:ktor-client-android:${versions.ktor}",
+                        'clientokhttp'       : "io.ktor:ktor-client-okhttp:${versions.ktor}",
+                        'ktorserialization'  : "io.ktor:ktor-client-serialization:${versions.ktor}",
+                        'kotlinserialization': "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.kotlinxserialization}",
+                        'clientloggingjvm'   : "io.ktor:ktor-client-logging-jvm:${versions.ktor}",
+                        'ktorclientmock'     : "io.ktor:ktor-client-mock:${versions.ktor}",
+                ],
+                'testlibraries'      : [
+                        'junit'     : "junit:junit:${versions.testlibraries.junit}",
+                        'mockk'     : "io.mockk:mockk:${versions.testlibraries.mockk}",
+                        'coroutines': "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.testlibraries.coroutines}",
+                ],
+                'compose'            : [
+                        'material'               : "androidx.compose.material3:material3:${versions.compose.composematerial}",
+                        'ui'                     : "androidx.compose.ui:ui:${versions.compose.composeui}",
+                        'uitest'                 : "androidx.compose.ui:ui-test-junit4:${versions.compose.composeui}",
+                        'activitycompose'        : "androidx.activity:activity-compose:${versions.compose.activitycompose}",
+                        'navigationcompose'      : "androidx.navigation:navigation-compose:${versions.compose.navigationcompose}",
+                        'constraintlayoutCompose': "androidx.constraintlayout:constraintlayout-compose:${versions.compose.constraintlayoutCompose}",
+                        'uitooling'              : "androidx.compose.ui:ui-tooling:${versions.compose.composeui}",
+                ],
+                'koin'               : [
+                        'koincore'   : "io.insert-koin:koin-core:${versions.koin}",
+                        'koinandroid': "io.insert-koin:koin-android:${versions.koin}",
+                        'koincompose': "io.insert-koin:koin-androidx-compose:${versions.koin}",
+                ]
+        ]
+        modules = [
+                'search' : ":search",
+                'library': ":library",
+        ]
+        plugins = [
+                kserialization: 'kotlinx-serialization',
+        ]
     }
-}// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-    id 'com.android.application' version '7.3.0' apply false
-    id 'com.android.library' version '7.3.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    repositories {
+        google()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath rootProject.ext.main.kotlinserialization
+        classpath rootProject.ext.main.gradleplugin
+        classpath rootProject.ext.main.kotlingradleplugin
+    }
 }

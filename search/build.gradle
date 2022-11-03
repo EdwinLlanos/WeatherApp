@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply plugin: rootProject.ext.plugins.kserialization
+
+android {
+    namespace 'com.weather.search'
+    compileSdk rootProject.ext.versions.compileSdk
+
+    def WEATHER_API_KEY = project.hasProperty('wheather_api_key') ? "${wheather_api_key}" :
+            "$System.env.wheather_api_key"
+
+    defaultConfig {
+        minSdk rootProject.ext.versions.minSdk
+        targetSdk rootProject.ext.versions.targetSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "WEATHER_API_KEY", "\"${WEATHER_API_KEY}\""
+        buildConfigField "String", "BASE_URL", '"https://api.weatherapi.com/v1/"'
+        buildConfigField "String", "END_POINT_SEARCH", '"search.json"'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation project(rootProject.ext.modules.library)
+
+    implementation rootProject.ext.deps.ktx
+    implementation rootProject.ext.deps.ktor.clientandroid
+    implementation rootProject.ext.deps.ktor.kotlinserialization
+    implementation rootProject.ext.deps.ktor.ktorserialization
+    implementation rootProject.ext.deps.gson
+
+    testImplementation rootProject.ext.deps.ktor.ktorclientmock
+    testImplementation rootProject.ext.deps.testlibraries.junit
+    testImplementation rootProject.ext.deps.testlibraries.mockk
+    testImplementation rootProject.ext.deps.testlibraries.coroutines
+}
