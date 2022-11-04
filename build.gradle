@@ -32,8 +32,7 @@ buildscript {
                 'kotlincoroutines'    : '1.6.4',
                 'livedatacore'        : '2.5.1',
                 'coil'                : '2.2.2',
-
-
+                'lottiecompose'       : '5.2.0',
         ]
         main = [
                 'kotlinserialization': "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
@@ -42,6 +41,7 @@ buildscript {
         ]
         deps = [
                 'coil'               : "io.coil-kt:coil-compose:${versions.coil}",
+                'lottiecompose'      : "com.airbnb.android:lottie-compose:${versions.lottiecompose}",
                 'livedatacore'       : "androidx.lifecycle:lifecycle-livedata-core-ktx:${versions.livedatacore}",
                 'kotlin'             : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
                 'kotlincoroutines'   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlincoroutines}",
