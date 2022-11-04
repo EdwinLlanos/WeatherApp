@@ -1,11 +1,11 @@
 package com.weather.app.data.datasource.remote.model
 
-import com.weather.app.domain.model.SearchModel
+import com.weather.app.domain.model.WeatherModel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchResponse(
+data class WeatherResponse(
     @SerialName("id")
     val id: Int,
     @SerialName("name")
@@ -14,6 +14,6 @@ data class SearchResponse(
     val country: String,
 )
 
-fun List<SearchResponse>.toDomain() = map {
-    SearchModel(id = it.id, name = it.name, country = it.country)
+fun List<WeatherResponse>.toDomain() = map {
+    WeatherModel(id = it.id, name = it.name, country = it.country)
 }

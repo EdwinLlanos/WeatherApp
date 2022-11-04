@@ -34,21 +34,22 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.weather.app.R
-import com.weather.app.domain.model.SearchModel
+import com.weather.app.domain.model.WeatherModel
 import com.weather.app.presentation.search.viewmodel.SearchViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    searchViewModel: SearchViewModel = getViewModel()
+    searchViewModel: SearchViewModel = getViewModel(),
+    onNavigateToDetail: (String) -> Unit
 ) {
     val textToSearch = remember { mutableStateOf(String()) }
     val hasFocus = remember { mutableStateOf(false) }
     val state = searchViewModel.uiState
     SearchBody(
         modifier = modifier,
-        listSearchModel = state.listSearchModel,
+        listWeatherModel = state.listWeatherModel,
         textToSearch = textToSearch.value,
         hasFocus = hasFocus.value,
         onSearchWord = {
@@ -57,18 +58,20 @@ fun SearchScreen(
         },
         onHasFocus = {
             hasFocus.value = it
-        }
+        },
+        onItemClicked = onNavigateToDetail
     )
 }
 
 @Composable
 fun SearchBody(
     modifier: Modifier = Modifier,
-    listSearchModel: List<SearchModel>,
+    listWeatherModel: List<WeatherModel>,
     textToSearch: String,
     hasFocus: Boolean,
     onSearchWord: (wordOrPhrase: String) -> Unit,
     onHasFocus: (isFocused: Boolean) -> Unit,
+    onItemClicked: (String) -> Unit
 ) {
     Column(modifier = modifier) {
         SearchViewTextField(
@@ -83,10 +86,8 @@ fun SearchBody(
                 .background(MaterialTheme.colorScheme.primaryContainer)
         ) {
             LazyColumn(modifier.padding(horizontal = 16.dp)) {
-                items(listSearchModel.size) { index ->
-                    ItemRow(searchModel = listSearchModel[index]) {
-
-                    }
+                items(listWeatherModel.size) { index ->
+                    ItemRow(weatherModel = listWeatherModel[index], onItemClicked = onItemClicked)
                 }
             }
         }
@@ -96,13 +97,14 @@ fun SearchBody(
 @Composable
 fun ItemRow(
     modifier: Modifier = Modifier,
-    searchModel: SearchModel,
+    weatherModel: WeatherModel,
     onItemClicked: (String) -> Unit
 ) {
     ConstraintLayout(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .clickable { onItemClicked(searchModel.name) }) {
+            .fillMaxWidth()
+            .clickable { onItemClicked(weatherModel.name) }) {
         val (name, country) = createRefs()
         Text(
             modifier = Modifier.constrainAs(name) {
@@ -112,7 +114,7 @@ fun ItemRow(
                 width = Dimension.wrapContent
                 height = Dimension.wrapContent
             },
-            text = searchModel.name, style = MaterialTheme.typography.titleMedium
+            text = weatherModel.name, style = MaterialTheme.typography.titleMedium
         )
         Text(
             modifier = Modifier.constrainAs(country) {
@@ -122,7 +124,7 @@ fun ItemRow(
                 width = Dimension.wrapContent
                 height = Dimension.wrapContent
             },
-            text = searchModel.country, style = MaterialTheme.typography.bodySmall
+            text = weatherModel.country, style = MaterialTheme.typography.bodySmall
         )
     }
 

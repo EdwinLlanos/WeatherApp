@@ -4,9 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.weather.app.navigation.ScreenNavigationSpec
+import com.weather.app.presentation.detail.navigation.DetailNavigationSpec.DETAIL_SCREEN
 import com.weather.app.presentation.search.SearchScreen
 
-object StoreNavigationSpec : ScreenNavigationSpec {
+object SearchNavigationSpec : ScreenNavigationSpec {
 
     override val route = "search"
 
@@ -15,7 +16,8 @@ object StoreNavigationSpec : ScreenNavigationSpec {
         navController: NavController,
         navBackStackEntry: NavBackStackEntry,
     ) {
-        SearchScreen()
-        // navController.navigate(LibrarySectionsScreenNavigationSpec.route)
+        SearchScreen { query ->
+            navController.navigate("$DETAIL_SCREEN/$query")
+        }
     }
 }

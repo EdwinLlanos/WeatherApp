@@ -3,9 +3,11 @@ package com.weather.app.di
 import com.weather.app.data.datasource.remote.WeatherNetworkClient
 import com.weather.app.data.datasource.remote.repository.WeatherRepositoryImpl
 import com.weather.app.domain.repository.WeatherRepository
+import com.weather.app.domain.usecase.GetWeatherDetailUseCase
 import com.weather.app.domain.usecase.SearchUseCase
 import com.weather.app.framework.network.NetworkHandler
 import com.weather.app.framework.network.ktorHttpClient
+import com.weather.app.presentation.detail.viewmodel.DetailViewModel
 import com.weather.app.presentation.search.viewmodel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -39,6 +41,7 @@ val utilsModule: Module = module {
 
 val useCaseModule: Module = module {
     factoryOf(::SearchUseCase)
+    factoryOf(::GetWeatherDetailUseCase)
 }
 
 val repositoryModule: Module = module {
@@ -53,4 +56,5 @@ val dataSourceModule: Module = module {
 
 val viewModelModule: Module = module {
     viewModelOf(::SearchViewModel)
+    viewModelOf(::DetailViewModel)
 }

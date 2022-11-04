@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weather.app.domain.model.SearchModel
+import com.weather.app.domain.model.WeatherModel
 import com.weather.app.domain.usecase.SearchUseCase
 import com.weather.app.domain.usecase.SearchUseCase.Parameters
 import com.weather.app.framework.network.Failure
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 data class SearchUiState(
     val screenState: ScreenState = ScreenState.Empty,
     val errorMessage: String = String(),
-    val listSearchModel: List<SearchModel> = emptyList()
+    val listWeatherModel: List<WeatherModel> = emptyList()
 )
 
 class SearchViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
@@ -44,10 +44,10 @@ class SearchViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
         }
     }
 
-    private fun handleSearchSuccess(listSearchModel: List<SearchModel>) {
-        Log.d(TAG, listSearchModel.toString())
+    private fun handleSearchSuccess(listWeatherModel: List<WeatherModel>) {
+        Log.d(TAG, listWeatherModel.toString())
         uiState = uiState.copy(
-            screenState = ScreenState.Success, listSearchModel = listSearchModel
+            screenState = ScreenState.Success, listWeatherModel = listWeatherModel
         )
     }
 

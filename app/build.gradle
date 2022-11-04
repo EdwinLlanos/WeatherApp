@@ -69,6 +69,7 @@ dependencies {
 
     implementation rootProject.ext.deps.ktx
     implementation rootProject.ext.deps.lifecycleruntimektx
+    implementation rootProject.ext.deps.coil
 
     implementation rootProject.ext.deps.compose.ui
     implementation rootProject.ext.deps.compose.material

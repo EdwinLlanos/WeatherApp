@@ -14,7 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.weather.app.navigation.ScreenNavigationSpec
-import com.weather.app.presentation.search.navigation.StoreNavigationSpec
+import com.weather.app.presentation.search.navigation.SearchNavigationSpec
 import com.weather.app.presentation.theme.WeatherAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 val navController = rememberNavController()
-                val startDestination: String = StoreNavigationSpec.route
+                val startDestination: String = SearchNavigationSpec.route
                 Scaffold(
                     Modifier
                         .fillMaxSize()

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Weather App</string>
     <string name="label_search">Buscar</string>
+    <string name="label_today">Today</string>
 </resources>

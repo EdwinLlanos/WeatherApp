@@ -5,13 +5,15 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLink
-import com.weather.app.presentation.search.navigation.StoreNavigationSpec
+import com.weather.app.presentation.detail.navigation.DetailNavigationSpec
+import com.weather.app.presentation.search.navigation.SearchNavigationSpec
 
 interface ScreenNavigationSpec {
 
     companion object {
         val allScreens = listOf(
-            StoreNavigationSpec
+            SearchNavigationSpec,
+            DetailNavigationSpec
         )
     }
 
