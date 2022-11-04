@@ -14,5 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Weather App"
 include ':app'
-include ':search'
-include ':library'

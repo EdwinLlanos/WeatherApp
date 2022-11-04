@@ -1,8 +1,8 @@
 package com.weather
 
 import android.app.Application
-import com.weather.weatherapp.BuildConfig.DEBUG
-import com.weather.weatherapp.di.injectFeatures
+import com.weather.app.BuildConfig.DEBUG
+import com.weather.app.di.injectFeatures
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

@@ -74,10 +74,6 @@ buildscript {
                         'koincompose': "io.insert-koin:koin-androidx-compose:${versions.koin}",
                 ]
         ]
-        modules = [
-                'search' : ":search",
-                'library': ":library",
-        ]
         plugins = [
                 kserialization: 'kotlinx-serialization',
         ]

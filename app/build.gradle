@@ -3,9 +3,14 @@ plugins {
     id 'kotlin-android'
 }
 
+apply plugin: rootProject.ext.plugins.kserialization
+
 android {
-    namespace 'com.weather.weatherapp'
+    namespace 'com.weather.app'
     compileSdk rootProject.ext.versions.compileSdk
+
+    def WEATHER_API_KEY = project.hasProperty('wheather_api_key') ? "${wheather_api_key}" :
+            "$System.env.wheather_api_key"
 
     defaultConfig {
         minSdk rootProject.ext.versions.minSdk
@@ -17,11 +22,20 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "WEATHER_API_KEY", "\"${WEATHER_API_KEY}\""
+        buildConfigField "String", "BASE_URL", '"https://api.weatherapi.com/v1/"'
+        buildConfigField "String", "END_POINT_SEARCH", '"search.json"'
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+        debug {
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -51,8 +65,6 @@ android {
 }
 
 dependencies {
-    implementation project(rootProject.ext.modules.search)
-    implementation project(rootProject.ext.modules.library)
 
     implementation rootProject.ext.deps.ktx
     implementation rootProject.ext.deps.lifecycleruntimektx
@@ -67,4 +79,10 @@ dependencies {
     implementation rootProject.ext.deps.koin.koincore
     implementation rootProject.ext.deps.koin.koinandroid
     implementation rootProject.ext.deps.koin.koincompose
+
+    implementation rootProject.ext.deps.ktor.clientandroid
+    implementation rootProject.ext.deps.ktor.clientokhttp
+    implementation rootProject.ext.deps.ktor.clientloggingjvm
+    implementation rootProject.ext.deps.ktor.kotlinserialization
+    implementation rootProject.ext.deps.ktor.ktorserialization
 }
