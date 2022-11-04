@@ -1,8 +1,8 @@
 package com.weather.app.di
 
-import com.weather.app.data.datasource.remote.SearchNetworkClient
-import com.weather.app.data.datasource.remote.repository.SearchRepositoryImpl
-import com.weather.app.domain.repository.SearchRepository
+import com.weather.app.data.datasource.remote.WeatherNetworkClient
+import com.weather.app.data.datasource.remote.repository.WeatherRepositoryImpl
+import com.weather.app.domain.repository.WeatherRepository
 import com.weather.app.domain.usecase.SearchUseCase
 import com.weather.app.framework.network.NetworkHandler
 import com.weather.app.framework.network.ktorHttpClient
@@ -42,13 +42,13 @@ val useCaseModule: Module = module {
 }
 
 val repositoryModule: Module = module {
-    singleOf(::SearchRepositoryImpl) {
-        bind<SearchRepository>()
+    singleOf(::WeatherRepositoryImpl) {
+        bind<WeatherRepository>()
     }
 }
 
 val dataSourceModule: Module = module {
-    singleOf(::SearchNetworkClient)
+    singleOf(::WeatherNetworkClient)
 }
 
 val viewModelModule: Module = module {

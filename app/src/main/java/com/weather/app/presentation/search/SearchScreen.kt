@@ -40,7 +40,8 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SearchScreen(
-    modifier: Modifier = Modifier, searchViewModel: SearchViewModel = getViewModel()
+    modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel = getViewModel()
 ) {
     val textToSearch = remember { mutableStateOf(String()) }
     val hasFocus = remember { mutableStateOf(false) }

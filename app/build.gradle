@@ -26,6 +26,7 @@ android {
         buildConfigField "String", "WEATHER_API_KEY", "\"${WEATHER_API_KEY}\""
         buildConfigField "String", "BASE_URL", '"https://api.weatherapi.com/v1/"'
         buildConfigField "String", "END_POINT_SEARCH", '"search.json"'
+        buildConfigField "String", "END_POINT_FORECAST", '"forecast.json"'
     }
 
     buildTypes {
