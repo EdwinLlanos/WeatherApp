@@ -15,8 +15,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -90,6 +92,7 @@ fun SearchScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBody(
     modifier: Modifier = Modifier,
@@ -102,8 +105,9 @@ fun SearchBody(
     onHasFocus: (isFocused: Boolean) -> Unit,
     onItemClicked: (String) -> Unit,
 ) {
-    Box(modifier = modifier) {
-        Column(modifier = Modifier) {
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        topBar = {
             SearchViewTextField(
                 textToSearch = textToSearch,
                 focusManager = focusManager,
@@ -111,34 +115,45 @@ fun SearchBody(
                 onTextChange = onSearchWord,
                 onFocusChange = onHasFocus
             )
+        },
+        content = { padding ->
             Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
+                modifier = modifier.padding(
+                    top = 55.dp,
+                    bottom = padding.calculateBottomPadding()
+                )
             ) {
-                LazyColumn(modifier.padding(horizontal = 16.dp)) {
-                    items(listWeatherModel.size) { index ->
-                        ItemRow(
-                            weatherModel = listWeatherModel[index],
-                            onItemClicked = onItemClicked
+                Column(modifier = Modifier) {
+                    Box(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        LazyColumn(modifier.padding(horizontal = 16.dp)) {
+                            items(listWeatherModel.size) { index ->
+                                ItemRow(
+                                    weatherModel = listWeatherModel[index],
+                                    onItemClicked = onItemClicked
+                                )
+                            }
+                        }
+                        val hideAnimation = hasFocus or listWeatherModel.isNotEmpty()
+                        WeatherAnimation(
+                            hideAnimation,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = 30.dp)
                         )
                     }
                 }
-                val hideAnimation = hasFocus or listWeatherModel.isNotEmpty()
-                WeatherAnimation(
-                    hideAnimation,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 30.dp)
+
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-    }
+    )
 }
 
 @Composable
