@@ -24,4 +24,3 @@ App
 ![Screen Shot 2021-09-29 at 12 51 15](https://raw.githubusercontent.com/EdwinLlanos/WeatherApp/develop/Screenshot_20221209_111014_com.weather.app.test.jpg)
 ![Screen Shot 2021-09-29 at 12 51 15](https://raw.githubusercontent.com/EdwinLlanos/WeatherApp/develop/Screenshot_20221209_111032_com.weather.app.test.jpg)
 ![Screen Shot 2021-09-29 at 12 51 15](https://raw.githubusercontent.com/EdwinLlanos/WeatherApp/develop/Screenshot_20221209_111039_com.weather.app.test.jpg)
-
