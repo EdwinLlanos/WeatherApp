@@ -1,6 +1,5 @@
 package com.weather.app.presentation.detail.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,7 +24,6 @@ class DetailViewModel(
 ) : ViewModel() {
 
     private companion object {
-        const val TAG = "DetailViewModel"
         const val DAYS_FOR_DEFAULT = 3
     }
 
@@ -52,14 +50,12 @@ class DetailViewModel(
     }
 
     private fun handleGetWeatherDetailSuccess(weatherDetailModel: WeatherDetailModel) {
-        Log.d(TAG, weatherDetailModel.toString())
         uiState = uiState.copy(
             screenState = ScreenState.Success, weatherDetailModel = weatherDetailModel
         )
     }
 
     private fun handleGetWeatherDetailError(exception: Exception) {
-        Log.d(TAG, exception.toString())
         uiState = uiState.copy(
             screenState = ScreenState.Error,
             errorMessage = getErrorMessage(exception)

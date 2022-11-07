@@ -1,6 +1,5 @@
 package com.weather.app.presentation.search.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,7 +23,6 @@ data class SearchUiState(
 class SearchViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
 
     private companion object {
-        const val TAG = "SearchViewModel"
         const val MINIMAL_LENGTH_WORDS = 3
     }
 
@@ -46,14 +44,12 @@ class SearchViewModel(private val searchUseCase: SearchUseCase) : ViewModel() {
     }
 
     private fun handleSearchSuccess(listWeatherModel: List<WeatherModel>) {
-        Log.d(TAG, listWeatherModel.toString())
         uiState = uiState.copy(
             screenState = ScreenState.Success, listWeatherModel = listWeatherModel
         )
     }
 
     private fun handleSearchError(exception: Exception) {
-        Log.d(TAG, exception.toString())
         uiState = uiState.copy(
             screenState = ScreenState.Error,
             errorMessage = getErrorMessage(exception)

@@ -4,7 +4,7 @@ import com.weather.app.domain.model.WeatherDetailModel
 import com.weather.app.domain.model.WeatherModel
 
 interface WeatherRepository {
-    suspend fun streaksByUser(
+    suspend fun search(
         query: String,
     ): List<WeatherModel>
 

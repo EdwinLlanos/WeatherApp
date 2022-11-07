@@ -12,7 +12,7 @@ class WeatherRepositoryImpl(
     private val networkHandler: NetworkHandler,
     private val weatherNetworkClient: WeatherNetworkClient
 ) : WeatherRepository {
-    override suspend fun streaksByUser(query: String): List<WeatherModel> =
+    override suspend fun search(query: String): List<WeatherModel> =
         when (networkHandler.isConnected) {
             true -> weatherNetworkClient.search(query).toDomain()
             else -> throw Failure.NetworkConnection

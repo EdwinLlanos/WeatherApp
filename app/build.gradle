@@ -89,4 +89,9 @@ dependencies {
     implementation rootProject.ext.deps.ktor.clientloggingjvm
     implementation rootProject.ext.deps.ktor.kotlinserialization
     implementation rootProject.ext.deps.ktor.ktorserialization
+
+    testImplementation rootProject.ext.deps.testlibraries.junit
+    testImplementation rootProject.ext.deps.ktor.ktorclientmock
+    testImplementation rootProject.ext.deps.testlibraries.mockk
+    testImplementation rootProject.ext.deps.testlibraries.coroutines
 }

@@ -10,7 +10,7 @@ class SearchUseCase(
     private val weatherRepository: WeatherRepository
 ) : UseCase<SearchUseCase.Parameters, List<WeatherModel>>(ioDispatcher) {
     override suspend fun execute(parameters: Parameters): List<WeatherModel> =
-        weatherRepository.streaksByUser(parameters.query)
+        weatherRepository.search(parameters.query)
 
     data class Parameters(val query: String)
 }
