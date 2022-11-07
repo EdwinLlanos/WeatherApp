@@ -17,7 +17,7 @@ El proyecto fue desarrollado en Android Studio Dolphin, no tiene requerimientos 
 ## Screenshots 
 
 Coverage
-![Screen Shot 2021-09-29 at 12 51 15](https://raw.githubusercontent.com/EdwinLlanos/WeatherApp/develop/Screenshot_20221209_111014_com.weather.app.test.jpg)
+![Screen Shot 2021-09-29 at 12 51 15](https://user-images.githubusercontent.com/58789676/200362331-3b36a2b2-8bca-430e-bc9c-903946d67c71.png)
 
 App
 
