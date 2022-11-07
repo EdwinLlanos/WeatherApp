@@ -3,16 +3,16 @@
 ## Arquitectura
 
 Como propuesta de arquitectura se implementó Clean Architecture, teniendo capa de datos, capa de dominio y capa de presentación.
-como punto importante en la revisión, la capa de presentación se desarrolló en compose partiendo de buenas prácticas para evitar
+Como punto importante en la revisión, la capa de presentación se desarrolló en compose partiendo de buenas prácticas para evitar
 problemas de rendimiento por recomposición.
 
 ## Pruebas unitarrias
 
-Se escribieron pruebas unitarias para el cliente, para el repositorio, para el caso de uso y para los viewModels:
+Se escribieron pruebas unitarias para el cliente, para el repositorio, para el caso de uso y para los viewModels.
 
 ## Construcción
 
-El proyecto fue desarrollado en Android Studio Dolphin, no tiene requerimientos especiales para la construcción
+El proyecto fue desarrollado en Android Studio Dolphin, no tiene requerimientos especiales para la construcción.
 
 ## Screenshots 
 
