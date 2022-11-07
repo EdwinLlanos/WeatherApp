@@ -17,13 +17,18 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -41,7 +46,9 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.weather.app.R
 import com.weather.app.domain.model.WeatherModel
+import com.weather.app.framework.state.ScreenState
 import com.weather.app.presentation.search.viewmodel.SearchViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -50,14 +57,28 @@ fun SearchScreen(
     searchViewModel: SearchViewModel = getViewModel(),
     onNavigateToDetail: (String) -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val textToSearch = remember { mutableStateOf(String()) }
     val hasFocus = remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     val state = searchViewModel.uiState
+    if (state.screenState == ScreenState.Error && state.errorMessage != null) {
+        val errorMessage = stringResource(id = state.errorMessage)
+        LaunchedEffect(Unit) {
+            focusManager.clearFocus()
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = errorMessage)
+            }
+        }
+    }
     SearchBody(
         modifier = modifier,
         listWeatherModel = state.listWeatherModel,
         textToSearch = textToSearch.value,
         hasFocus = hasFocus.value,
+        snackbarHostState = snackbarHostState,
+        focusManager = focusManager,
         onSearchWord = {
             textToSearch.value = it
             searchViewModel.search(it)
@@ -75,35 +96,48 @@ fun SearchBody(
     listWeatherModel: List<WeatherModel>,
     textToSearch: String,
     hasFocus: Boolean,
+    focusManager: FocusManager,
+    snackbarHostState: SnackbarHostState,
     onSearchWord: (wordOrPhrase: String) -> Unit,
     onHasFocus: (isFocused: Boolean) -> Unit,
-    onItemClicked: (String) -> Unit
+    onItemClicked: (String) -> Unit,
 ) {
-    Column(modifier = modifier) {
-        SearchViewTextField(
-            textToSearch = textToSearch,
-            hasFocus = hasFocus,
-            onTextChange = onSearchWord,
-            onFocusChange = onHasFocus
-        )
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            LazyColumn(modifier.padding(horizontal = 16.dp)) {
-                items(listWeatherModel.size) { index ->
-                    ItemRow(weatherModel = listWeatherModel[index], onItemClicked = onItemClicked)
-                }
-            }
-            val hideAnimation = hasFocus or listWeatherModel.isNotEmpty()
-            WeatherAnimation(
-                hideAnimation,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 30.dp)
+    Box(modifier = modifier) {
+        Column(modifier = Modifier) {
+            SearchViewTextField(
+                textToSearch = textToSearch,
+                focusManager = focusManager,
+                hasFocus = hasFocus,
+                onTextChange = onSearchWord,
+                onFocusChange = onHasFocus
             )
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                LazyColumn(modifier.padding(horizontal = 16.dp)) {
+                    items(listWeatherModel.size) { index ->
+                        ItemRow(
+                            weatherModel = listWeatherModel[index],
+                            onItemClicked = onItemClicked
+                        )
+                    }
+                }
+                val hideAnimation = hasFocus or listWeatherModel.isNotEmpty()
+                WeatherAnimation(
+                    hideAnimation,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 30.dp)
+                )
+            }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -166,12 +200,12 @@ fun ItemRow(
 fun SearchViewTextField(
     modifier: Modifier = Modifier,
     textToSearch: String,
+    focusManager: FocusManager,
     hasFocus: Boolean,
     onTextChange: (wordPhrase: String) -> Unit,
     onFocusChange: (hasFocus: Boolean) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
 
     BasicTextField(
         value = textToSearch,

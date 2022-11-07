@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -19,9 +21,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,10 +36,15 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.weather.app.R
 import com.weather.app.domain.model.ForecastDayModel
 import com.weather.app.domain.model.WeatherDetailModel
+import com.weather.app.framework.state.ScreenState
 import com.weather.app.presentation.detail.viewmodel.DetailViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -43,13 +54,25 @@ fun DetailScree(
     detailViewModel: DetailViewModel = getViewModel(),
     onBackPressed: () -> Unit
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         detailViewModel.getWeatherDetail(query)
     }
     val state = detailViewModel.uiState
+    if (state.screenState == ScreenState.Error && state.errorMessage != null) {
+        val errorMessage = stringResource(id = state.errorMessage)
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message = errorMessage)
+            }
+        }
+    }
     DetailBody(
         modifier = modifier,
         weatherDetailModel = state.weatherDetailModel,
+        snackbarHostState = snackbarHostState,
         onBackPressed = onBackPressed
     )
 }
@@ -59,8 +82,10 @@ fun DetailScree(
 fun DetailBody(
     modifier: Modifier,
     weatherDetailModel: WeatherDetailModel?,
+    snackbarHostState: SnackbarHostState,
     onBackPressed: () -> Unit
 ) {
+    val showPlaceholder = weatherDetailModel == null
     Scaffold(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         topBar = {
@@ -81,13 +106,21 @@ fun DetailBody(
                 Text(
                     text = weatherDetailModel?.locationModel?.name ?: String(),
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.placeholder(
+                        visible = showPlaceholder,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        highlight = PlaceholderHighlight.shimmer(
+                            highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    )
                 )
             }
         }, content = { padding ->
             ConstraintLayout(
                 modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(
                         top = 55.dp,
                         start = 16.dp,
@@ -96,24 +129,40 @@ fun DetailBody(
                     )
 
             ) {
-                val (time, current, conditionImage, conditionTemp, conditionText, forecast) = createRefs()
+                val (time, current, conditionImage, conditionTemp, conditionText, forecast, snackbarHost) = createRefs()
                 Text(
-                    modifier = Modifier.constrainAs(time) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        width = Dimension.wrapContent
-                    },
+                    modifier = Modifier
+                        .constrainAs(time) {
+                            top.linkTo(parent.top)
+                            end.linkTo(parent.end)
+                            width = Dimension.wrapContent
+                        }
+                        .placeholder(
+                            visible = showPlaceholder,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+                        ),
                     text = weatherDetailModel?.locationModel?.localtime ?: String(),
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Text(
-                    modifier = Modifier.constrainAs(current) {
-                        start.linkTo(parent.start)
-                        top.linkTo(time.bottom, 16.dp)
-                        end.linkTo(parent.end)
-                        width = Dimension.wrapContent
-                    },
+                    modifier = Modifier
+                        .constrainAs(current) {
+                            start.linkTo(parent.start)
+                            top.linkTo(time.bottom, 16.dp)
+                            end.linkTo(parent.end)
+                            width = Dimension.wrapContent
+                        }
+                        .placeholder(
+                            visible = showPlaceholder,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+                        ),
                     text = stringResource(id = R.string.label_today),
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -126,30 +175,53 @@ fun DetailBody(
                             width = Dimension.wrapContent
                             height = Dimension.wrapContent
                         }
-                        .size(50.dp),
+                        .size(50.dp)
+                        .placeholder(
+                            visible = showPlaceholder,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+                        ),
                     model = "https:${weatherDetailModel?.currentModel?.conditionModel?.icon}",
                     contentDescription = null
                 )
 
                 Text(
-                    modifier = Modifier.constrainAs(conditionText) {
-                        start.linkTo(conditionImage.end)
-                        top.linkTo(conditionImage.top)
-                        bottom.linkTo(conditionImage.bottom)
-                        width = Dimension.wrapContent
-                    },
+                    modifier = Modifier
+                        .constrainAs(conditionText) {
+                            start.linkTo(conditionImage.end)
+                            top.linkTo(conditionImage.top)
+                            bottom.linkTo(conditionImage.bottom)
+                            width = Dimension.wrapContent
+                        }
+                        .placeholder(
+                            visible = showPlaceholder,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+                        ),
                     text = weatherDetailModel?.currentModel?.conditionModel?.text ?: String(),
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Text(
-                    modifier = Modifier.constrainAs(conditionTemp) {
-                        start.linkTo(conditionText.end)
-                        end.linkTo(parent.end)
-                        top.linkTo(conditionText.top)
-                        bottom.linkTo(conditionText.bottom)
-                        width = Dimension.wrapContent
-                    },
+                    modifier = Modifier
+                        .constrainAs(conditionTemp) {
+                            start.linkTo(conditionText.end)
+                            end.linkTo(parent.end)
+                            top.linkTo(conditionText.top)
+                            bottom.linkTo(conditionText.bottom)
+                            width = Dimension.wrapContent
+                        }
+                        .placeholder(
+                            visible = showPlaceholder,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                            )
+                        ),
                     text = "${weatherDetailModel?.currentModel?.tempC ?: "0"} °C",
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -161,21 +233,40 @@ fun DetailBody(
                         end.linkTo(parent.end)
                     },
                 ) {
-                    items(weatherDetailModel?.forecastModel?.forecastDayModel?.size ?: 0) { index ->
-                        DayItem(weatherDetailModel?.forecastModel?.forecastDayModel?.get(index))
+                    items(weatherDetailModel?.forecastModel?.forecastDayModel?.size ?: 3) { index ->
+                        DayItem(
+                            weatherDetailModel?.forecastModel?.forecastDayModel?.get(index),
+                            showPlaceholder
+                        )
                     }
                 }
+
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier.constrainAs(snackbarHost) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                )
             }
         })
 }
 
 @Composable
-fun DayItem(forecastDayModel: ForecastDayModel?) {
+fun DayItem(forecastDayModel: ForecastDayModel?, showPlaceholder: Boolean) {
     Card(
         modifier = Modifier
             .height(250.dp)
             .width(200.dp)
             .padding(8.dp)
+            .placeholder(
+                visible = showPlaceholder,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                highlight = PlaceholderHighlight.shimmer(
+                    highlightColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            )
     ) {
         Column(
             modifier = Modifier

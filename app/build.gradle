@@ -71,6 +71,7 @@ dependencies {
     implementation rootProject.ext.deps.lifecycleruntimektx
     implementation rootProject.ext.deps.coil
     implementation rootProject.ext.deps.lottiecompose
+    implementation rootProject.ext.deps.shimmercompose
 
     implementation rootProject.ext.deps.compose.ui
     implementation rootProject.ext.deps.compose.material

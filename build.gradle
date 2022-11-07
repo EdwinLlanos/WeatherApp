@@ -33,6 +33,7 @@ buildscript {
                 'livedatacore'        : '2.5.1',
                 'coil'                : '2.2.2',
                 'lottiecompose'       : '5.2.0',
+                'shimmercompose'      : '0.24.5-alpha',
         ]
         main = [
                 'kotlinserialization': "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}",
@@ -40,6 +41,7 @@ buildscript {
                 'kotlingradleplugin' : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.gradleplugin}",
         ]
         deps = [
+                'shimmercompose'     : "com.google.accompanist:accompanist-placeholder:${versions.shimmercompose}",
                 'coil'               : "io.coil-kt:coil-compose:${versions.coil}",
                 'lottiecompose'      : "com.airbnb.android:lottie-compose:${versions.lottiecompose}",
                 'livedatacore'       : "androidx.lifecycle:lifecycle-livedata-core-ktx:${versions.livedatacore}",
