@@ -17,7 +17,8 @@ El proyecto fue desarrollado en Android Studio Dolphin, no tiene requerimientos 
 ## Screenshots 
 
 Coverage
-<img src="https://user-images.githubusercontent.com/58789676/200362331-3b36a2b2-8bca-430e-bc9c-903946d67c71.png" width="260">
+
+<img src="https://user-images.githubusercontent.com/58789676/200362331-3b36a2b2-8bca-430e-bc9c-903946d67c71.png" width="600">
 
 App
 
